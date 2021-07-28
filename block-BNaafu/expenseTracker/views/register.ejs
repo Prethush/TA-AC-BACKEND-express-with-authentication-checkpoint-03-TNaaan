@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="/users/register" method="POST">
+        <input type="text" name="name" placeholder="Enter Name" required>
+        <input type="email" name="email" placeholder="Enter Email">
+        <input type="password" name="passwd" placeholder="Enter Password" required>
+        <input type="number" name="age" placeholder="Enter Age">
+        <input type="text" name="phone" placeholder="Enter Phone"> 
+        <input type="text" name="country" placeholder="Enter Country">
+        <input type="submit" value="Register">
+    </form>
+    <a href="/auth/github">Login with GitHub</a>
+    <a href="/auth/google">Login with Google</a>
+</body>
+</html>
