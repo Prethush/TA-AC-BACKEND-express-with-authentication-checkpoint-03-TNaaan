@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <a href="/home">Back</a>
+    <a href="/clients/statementList">Reset</a>
+    <h1>Savings Of this Month: <%= savings %></h1>
+    <% if(balance) {%>
+        <h2>Savings of this particular search: <%= balance %></h2>
+    <% } else { %>
+        <h2>Savings of this particular search 0</h2>
+    <% } %>
+   
+    <h2>Filter By Date</h2>
+    <form action="/clients/statementList/filterByDate" method="GET">
+        <input type="date" name="startDate">
+        <input type="date" name="endDate">
+        <input type="submit" value="Search">
+    </form>
+    <!-- Filter by month -->
+    <h2>Filter By Month</h2>
+    <form action="/clients/statementList/filterByMonth" method="get">
+        <input type="month" name="month">
+        <input type="submit" value="search">
+    </form>
+
+    <!-- Filter by month and income and expense categories -->
+    <h2>Filter By Date, Income and Expense Category</h2>
+    <form action="/clients/statementList/filterByDateAndCategory" method="POST">
+        <input type="date" name="startDate">
+        <input type="date" name="endDate">
+        <input type="text" name="incSource" placeholder="Income Source" required>
+        <input type="text" name="expCategory" placeholder="Expense Category" required>
+        <input type="submit" value="search">
+    </form>
+    <% incomes.forEach(i => { %>
+        <h2><%= i.incname %></h2>
+        <h2><%= i.amount %></h2>
+        <a href="/income/<%= i.id %>">Show Details</a>
+    <% }) %>
+    <% expenses.forEach(i => { %>
+        <h2><%= i.expname %></h2>
+        <h2><%= i.amount %></h2>
+        <a href="/expense/<%= i.id %>">Show Details</a>
+    <% }) %>
+</body>
+</html>
