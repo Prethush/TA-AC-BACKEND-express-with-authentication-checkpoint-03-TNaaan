@@ -3,6 +3,7 @@ var router = express.Router();
 var User = require('../models/users');
 var nodemailer = require('nodemailer');
 var random = require('../randomText');
+var bcrypt = require('bcrypt');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -11,7 +12,8 @@ router.get('/', function(req, res, next) {
 
 //render register form
 router.get('/register', (req, res, next) => {
-  res.render('register');
+  let info = req.flash("info")[0];
+  res.render('register', {info});
 });
 
 //process register request
@@ -35,13 +37,15 @@ router.post('/register', (req, res, next) => {
       from: 'prethushak770@gmail.com',
       to: email,
       subject: 'Verification Email', 
-      html: `<h2>${user.random}</h2>
+      html: `<h2>${req.body.random}</h2>
               <h3>Click On the this http://localhost:3000/users/verifyEmail link to verify your email and login </h3>`,
      
     }
 
     transporter.sendMail(mailData, function(err, info)  {
         if(err) return next(err);
+        req.flash("info", "A verification code is send to your Email please check");
+        req.session.email1 = user.email;
         res.redirect('/users/register');
     })
   })
@@ -50,7 +54,8 @@ router.post('/register', (req, res, next) => {
 //render login page
 router.get('/login', (req, res, next) => {
   let error = req.flash('error')[0];
-  res.render('login', {error});
+  let info = req.flash('info')[0];
+  res.render('login', {error, info});
 });
 
 //process login request
@@ -72,7 +77,7 @@ router.post('/login', (req, res, next) => {
     }
     user.verifyPasswd(passwd, (err, result) => {
       if(err) return next(err);
-      if(!passwd) {
+      if(!result) {
         req.flash("error", "Password is incorrect");
         return res.redirect('/users/login');
       }
@@ -92,12 +97,14 @@ router.get('/logout', (req, res) => {
 
 //rendering verify email page
 router.get('/verifyEmail', (req, res, next) => {
-    res.render('verifyEmail');
+    let error = req.flash("error")[0];
+    res.render('verifyEmail', {error});
 });
 
 //process email varification
 router.post('/verifyEmail', (req, res, next) => {
-  let {passcode, email} = req.body;
+  let {passcode} = req.body;
+  let email = req.session.email1;
   User.findOne({email}, (err, user) => {
     if(err) return next(err);
     if(passcode == user.random) {
@@ -116,15 +123,19 @@ router.post('/verifyEmail', (req, res, next) => {
 
 //render forgot password page
 router.get('/login/forgotpassword', (req, res, next) => {
-  res.render('forgotPassword');
+  let error = req.flash('error')[0];
+  let info = req.flash('info')[0];
+  res.render('forgotPassword', {error, info});
 });
 
 //process forgot password
 router.post('/login/forgotpassword', (req, res, next) => {
   let {email} = req.body;
   req.body.random = random();
+  console.log(req.body.random);
   User.findOneAndUpdate({email}, req.body, (err, user) => {
     if(err) return next(err);
+    console.log(user);
     if(!user) {
       req.flash('error', 'The Email entered is not Registered, Please entered the registered Email');
       return res.redirect('/users/login/forgotpassword');
@@ -143,11 +154,11 @@ router.post('/login/forgotpassword', (req, res, next) => {
       from: 'prethushak770@gmail.com',
       to: email,
       subject: 'Verification Email',
-      html: `<h1>${user.random}</h1>
+      html: `<h1>${req.body.random}</h1>
               <h2>Please Copy above 6 digit number and click this link http://localhost:3000/users/login/resetpassword/verify </h2>`
 
     };
-
+    
     transporter.sendMail(mailData, (err, info) => {
       if(err) return next(err);
       req.flash("info", "A password rest code is send to your email");
@@ -159,7 +170,8 @@ router.post('/login/forgotpassword', (req, res, next) => {
 
 //render reset password verification code page
 router.get('/login/resetpassword/verify', (req, res, next) => {
-  res.render('resetPasswordVerificationCode');
+  let error = req.flash('error')[0];
+  res.render('resetPasswordVerificationCode', {error});
 });
 
 
@@ -181,7 +193,8 @@ router.post('/login/resetpassword/verify', (req, res, next) => {
 
 //render reset password page
 router.get('/login/resetpassword', (req, res, next) => {
-  res.render('resetPassword');
+  let error = req.flash("error")[0];
+  res.render('resetPassword', {error});
 });
 
 //reset password
@@ -191,17 +204,22 @@ router.post('/login/resetpassword', (req, res, next) => {
   if(newPasswd1 === newPasswd2) {
     User.findOne({email}, (err, user) => {
       if(err) return next(user);
-      bcrypt.hash(passwd1, 10, (err, hashed) => {
+      bcrypt.hash(newPasswd1, 10, (err, hashed) => {
         if(err) return next(err);
-        user.passwd = hashed;
-        user.save((err, user) => {
+        req.body.passwd = hashed;
+        User.findOneAndUpdate({email}, req.body, (err, user) => {
           if(err) return next(err);
-          res.redirect('/home');
+          req.flash("info", ("Password is Successfully Changed"))
+          return res.redirect('/users/login');
         })
+        
       })
     })
+  } else {
+    req.flash("error", ("Password does not match"));
+    res.redirect('/users/login/resetpassword');
   }
-})
+});
 
 
 
