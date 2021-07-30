@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <%- include('partials/header') %>
+    <main>
+        <section>
+            <h2 class="text-center text-4xl font-bold my-8">Expense Details Page</h2>
+            <div class="w-1/3 bg-red-200 p-8 mx-auto rounded-lg">
+                <h2 class="text-3xl font-bold my-2"><%= expense.expname %></h2>
+                <% expense.category.forEach(e => { %>
+                <h2 class="inline-block text-xl bg-gray-500 text-white p-1 rounded-md"><span><%= e %></span></h2>
+                <% }) %>
+                <h2 class="text-xl my-2"><span class="text-2xl font-bold">Date: </span><%= expense.date %></h2>
+                <h2 class="text-xl my-2"> <span class="text-2xl font-bold">Amount: </span> <%= expense.amount %></h2>
+                <a href="/expense/<%= expense.id %>/edit" class="bg-gray-500 hover:bg-gray-400 p-2 text-white font-bold rounded-md">Edit</a>
+                <a href="/expense/<%= expense.id %>/delete" class="bg-gray-500 hover:bg-gray-400 p-2 text-white font-bold rounded-md">Delete</a>
+            </div>
+        </section>
+    </main>
+    
+    
+</body>
+</html>

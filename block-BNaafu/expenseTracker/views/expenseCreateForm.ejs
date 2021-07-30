@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <%- include('partials/header') %>
+    <main>
+        <section class="h-custom flex flex-col items-center w-1/3 mx-auto justify-center">
+            <form action="/clients/expense" method="POST" class="flex flex-col p-8 border-2 border-gray-300 rounded-lg w-custom">
+                <% if(info) { %>
+                    <legend class="text-green-500 font-bold"><%= info %></legend>
+                <%} %>
+                <input type="text" name="expname" placeholder="Enter Expense Name" class="p-3 bg-gray-200 my-2 rounded-lg border-2 border-gray-300">
+                <input type="text" name="category" placeholder="Enter the Expense Category" class="p-3 bg-gray-200 my-2 rounded-lg border-2 border-gray-300">
+                <input type="number" name="amount" placeholder="Amount" class="p-3 bg-gray-200 my-2 rounded-lg border-2 border-gray-300">
+                <input type="date" name="date" class="p-3 bg-gray-200 my-2 rounded-lg border-2 border-gray-300">
+                <input type="submit" value="Add Expense" class="p-3 bg-blue-500 text-white font-bold my-2 rounded-lg hover:bg-blue-400">
+            </form>
+        </section>
+    </main>
+    
+</body>
+</html>

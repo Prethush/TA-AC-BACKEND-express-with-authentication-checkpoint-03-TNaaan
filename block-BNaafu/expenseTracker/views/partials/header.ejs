@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Document</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <header class="bg-green-600 py-6 px-12 flex justify-between items-center">
+        <a href="/"><h1 class="text-white text-3xl font-bold">expenseTracker</h1></a>
+      <nav class="flex">
+        <% if(user !== null) { %>
+            <a href="/home"><h3 class="text-red-300 text-2xl font-bold mr-6"><%= user.name %></h3></a>
+            <a href="/clients/statementList" class="text-white text-xl font-bold mr-6">View Statement</a>
+            <a href="/users/logout" class="text-white text-xl font-bold">Logout</a>
+          <% } else { %>
+            <a href="/users/register" class="text-white text-xl font-bold mr-6">Register</a>
+            <a href="/users/login" class="text-white text-xl font-bold">Login</a>
+          <% } %>
+        
+      </nav>
+    </header>
+    
+  </body>
+</html>

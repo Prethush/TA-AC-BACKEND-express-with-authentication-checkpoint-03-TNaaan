@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <%- include('partials/header') %>
+    <h2 class="text-center font-bold text-5xl mt-16">Welcome <span class="text-red-500"><%= user.name %></span></h2>
+    <div class="text-center mt-10">
+        <a href="/clients/income/new" class="mx-2 bg-gray-500 text-white font-bold p-2 text-xl rounded-lg hover:bg-gray-400">Add Income</a>
+        <a href="/clients/expense/new"  class="mx-2 bg-gray-500 text-white font-bold p-2 text-xl rounded-lg hover:bg-gray-400">Add Expense</a>
+        <a href="/clients/statementList"  class="mx-2 bg-gray-500 text-white font-bold p-2 text-xl rounded-lg hover:bg-gray-400">View Stement</a>
+    </div>
+    
+</body>
+</html>
