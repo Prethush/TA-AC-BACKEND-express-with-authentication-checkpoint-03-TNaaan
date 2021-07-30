@@ -7,13 +7,23 @@
     <title>Document</title>
 </head>
 <body>
-    <h2><%= income.incname %></h2>
-    <% income.sources.forEach(i => { %>
-        <h2><%= i %></h2>
-    <% }) %>
-    <h2>Date: <%= income.date %></h2>
-    <h2>Amount: <%= income.amount %></h2>
-    <a href="">Edit</a>
-    <a href="">Delete</a>
+    <%- include('partials/header') %>
+    <main>
+        <section>
+            <h2 class="text-center text-4xl font-bold my-8">Income Details Page</h2>
+            <div class="w-1/3 bg-red-200 p-8 mx-auto rounded-lg">
+                <h2 class="text-3xl font-bold my-2"><%= income.incname %></h2>
+                <% income.sources.forEach(i => { %>
+                    <h2 class="inline-block text-xl bg-gray-500 text-white p-1 rounded-md"><%= i %></h2>
+                <% }) %>
+                <h2 class="text-xl my-2"><span class="text-2xl font-bold">Date:</span> <%= income.date %></h2>
+                <h2 class="text-xl my-2"> <span class="text-2xl font-bold">Amount: </span><%= income.amount %></h2>
+                <a href="/income/<%= income.id %>/edit" class="bg-gray-500 hover:bg-gray-400 p-2 text-white font-bold rounded-md">Edit</a>
+                <a href="/income/<%= income.id %>/delete" class="bg-gray-500 hover:bg-gray-400 p-2 text-white font-bold rounded-md">Delete</a>
+            </div>
+           
+        </section>
+    </main>
+   
 </body>
 </html>

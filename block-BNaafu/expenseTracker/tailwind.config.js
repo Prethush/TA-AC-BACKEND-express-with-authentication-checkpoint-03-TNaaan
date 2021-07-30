@@ -8,7 +8,12 @@ module.exports = {
       },
       width: {
         custom: "90%"
+      },
+      flex: {
+        33: "0 1 31.5%",
+        
       }
+
     },
   },
   variants: {
