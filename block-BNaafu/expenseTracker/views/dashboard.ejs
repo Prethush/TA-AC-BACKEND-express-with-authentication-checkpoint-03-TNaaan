@@ -7,10 +7,13 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Successfully Loggedin</h1>
-    <a href="/users/logout">Logout</a>
-    <a href="/clients/income/new">Add Income</a>
-    <a href="/clients/expense/new">Add Expense</a>
-    <a href="/clients/statementList">View Stement</a>
+    <%- include('partials/header') %>
+    <h2 class="text-center font-bold text-5xl mt-16">Welcome <span class="text-red-500"><%= user.name %></span></h2>
+    <div class="text-center mt-10">
+        <a href="/clients/income/new" class="mx-2 bg-gray-500 text-white font-bold p-2 text-xl rounded-lg hover:bg-gray-400">Add Income</a>
+        <a href="/clients/expense/new"  class="mx-2 bg-gray-500 text-white font-bold p-2 text-xl rounded-lg hover:bg-gray-400">Add Expense</a>
+        <a href="/clients/statementList"  class="mx-2 bg-gray-500 text-white font-bold p-2 text-xl rounded-lg hover:bg-gray-400">View Stement</a>
+    </div>
+    
 </body>
 </html>

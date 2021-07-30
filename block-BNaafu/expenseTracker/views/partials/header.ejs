@@ -9,8 +9,8 @@
         <a href="/"><h1 class="text-white text-3xl font-bold">expenseTracker</h1></a>
       <nav class="flex">
         <% if(user !== null) { %>
-            <h3 class="text-red-300 text-2xl font-bold mr-6"><%= user.name %></h3>
-            <a href="/home" class="text-white text-xl font-bold mr-6">Dashboard</a>
+            <a href="/home"><h3 class="text-red-300 text-2xl font-bold mr-6"><%= user.name %></h3></a>
+            <a href="/clients/statementList" class="text-white text-xl font-bold mr-6">View Statement</a>
             <a href="/users/logout" class="text-white text-xl font-bold">Logout</a>
           <% } else { %>
             <a href="/users/register" class="text-white text-xl font-bold mr-6">Register</a>

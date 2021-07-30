@@ -7,46 +7,69 @@
     <title>Document</title>
 </head>
 <body>
-    <a href="/home">Back</a>
-    <a href="/clients/statementList">Reset</a>
-    <h1>Savings Of this Month: <%= savings %></h1>
-    <% if(balance) {%>
-        <h2>Savings of this particular search: <%= balance %></h2>
-    <% } else { %>
-        <h2>Savings of this particular search 0</h2>
-    <% } %>
-   
-    <h2>Filter By Date</h2>
-    <form action="/clients/statementList/filterByDate" method="GET">
-        <input type="date" name="startDate">
-        <input type="date" name="endDate">
-        <input type="submit" value="Search">
-    </form>
-    <!-- Filter by month -->
-    <h2>Filter By Month</h2>
-    <form action="/clients/statementList/filterByMonth" method="get">
-        <input type="month" name="month">
-        <input type="submit" value="search">
-    </form>
+    <%- include('partials/header') %>
+    <main class="px-12">
+        <section>
+            <div>
+                <h1 class="text-4xl font-bold text-center mt-8">Savings Of this Month: <span class="text-red-500"><%= savings %></span></h1>
+                <% if(balance) {%>
+                    <h2 class="text-4xl font-bold text-center mt-8">Savings of this particular search: <span class="text-red-500"><%= balance %></span></h2>
+                <% } else { %>
+                    <h2 class="text-4xl font-bold text-center mt-8">Savings of this particular search: <span class="text-red-500">0</span></h2>
+                <% } %>
+                <div class="text-center mt-6">
+                    <a href="/clients/statementList" class="bg-blue-500 hover:bg-blue-400 text-white font-bold p-2 rounded-lg text-xl">Reset</a>
+                </div>
+            </div>
+            
+            <div class="flex justify-between my-8">
+                <form action="/clients/statementList/filterByDate" method="GET" class="flex flex-col p-8 border-2 border-gray-300 rounded-lg flex-33 self-start">
+                    <h2 class="my-1 text-xl font-bold">Filter By Date</h2>
+                    <input type="date" name="startDate" class="p-2 bg-gray-200 my-1 rounded-lg border-2 border-gray-300">
+                    <input type="date" name="endDate" class="p-2 bg-gray-200 my-1 rounded-lg border-2 border-gray-300">
+                    <input type="submit" value="Search" class="p-2 bg-blue-500 text-white font-bold my-1 rounded-lg hover:bg-blue-400">
+                </form>
+               
+                <form action="/clients/statementList/filterByMonth" method="get" class="flex flex-col p-8 border-2 border-gray-300 rounded-lg self-start flex-33">
+                    <h2 class="my-1 text-xl font-bold">Filter By Month</h2>
+                    <input type="month" name="month" class="p-2 bg-gray-200 my-1 rounded-lg border-2 border-gray-300">
+                    <input type="submit" value="search" class="p-2 bg-blue-500 text-white font-bold my-1 rounded-lg hover:bg-blue-400">
+                </form>
+               
+                <form action="/clients/statementList/filterByDateAndCategory" method="POST" class="flex flex-col p-8 border-2 border-gray-300 rounded-lg flex-33 abc">
+                    <h2  class="my-1 text-xl font-bold">Filter By Date, Income and Expense Category</h2>
+                    <input type="date" name="startDate" class="p-2 bg-gray-200 my-2 rounded-lg border-2 border-gray-300">
+                    <input type="date" name="endDate" class="p-2 bg-gray-200 my-2 rounded-lg border-2 border-gray-300">
+                    <input type="text" name="incSource" placeholder="Income Source" required class="p-2 bg-gray-200 my-2 rounded-lg border-2 border-gray-300">
+                    <input type="text" name="expCategory" placeholder="Expense Category" required class="p-2 bg-gray-200 my-2 rounded-lg border-2 border-gray-300">
+                    <input type="submit" value="search" class="p-2 bg-blue-500 text-white font-bold my-2 rounded-lg hover:bg-blue-400">
+                </form>
+            </div>
+        </section>
+        <section class="my-8">
+            <% incomes.forEach(i => { %>
+                <div class="w-1/2 bg-green-300 p-8 my-3 mx-auto rounded-lg flex justify-between text-xl">
+                    <h2 class="font-bold"><%= i.incname %></h2>
+                    <h2 class="font-bold"><%= i.amount %></h2>
+                    <a href="/income/<%= i.id %>" class="p-2 bg-blue-700 text-white font-bold hover:bg-blue-600 rounded-lg">Show Details</a>
+                </div>
+                
+            <% }) %>
+            <% expenses.forEach(i => { %>
+                <div class="w-1/2 bg-red-300 p-8 my-3 mx-auto rounded-lg flex justify-between text-xl">
+                    <h2 class="font-bold"><%= i.expname %></h2>
+                    <h2 class="font-bold"><%= i.amount %></h2>
+                    <a href="/expense/<%= i.id %>" class="p-2 bg-blue-700 text-white font-bold hover:bg-blue-600 rounded-lg">Show Details</a>
+                </div>
+                
+            <% }) %>
+            <% if((expenses.length) === 0 && (incomes.length === 0)) { %>
+                <h1 class="text-center text-3xl font-bold">No Records Available</h1>
+            <% } %>
+        </section>
+    </main>
+    
 
-    <!-- Filter by month and income and expense categories -->
-    <h2>Filter By Date, Income and Expense Category</h2>
-    <form action="/clients/statementList/filterByDateAndCategory" method="POST">
-        <input type="date" name="startDate">
-        <input type="date" name="endDate">
-        <input type="text" name="incSource" placeholder="Income Source" required>
-        <input type="text" name="expCategory" placeholder="Expense Category" required>
-        <input type="submit" value="search">
-    </form>
-    <% incomes.forEach(i => { %>
-        <h2><%= i.incname %></h2>
-        <h2><%= i.amount %></h2>
-        <a href="/income/<%= i.id %>">Show Details</a>
-    <% }) %>
-    <% expenses.forEach(i => { %>
-        <h2><%= i.expname %></h2>
-        <h2><%= i.amount %></h2>
-        <a href="/expense/<%= i.id %>">Show Details</a>
-    <% }) %>
+    
 </body>
 </html>

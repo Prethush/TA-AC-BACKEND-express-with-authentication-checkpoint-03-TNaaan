@@ -39,36 +39,41 @@ router.use((req, res, next) => {
 
 //render income create form
 router.get('/income/new', (req, res, next) => {
-    res.render('incomeCreateForm');
+    let info = req.flash('info')[0];
+    res.render('incomeCreateForm', {info});
 });
 
 //add income
 router.post('/income', (req, res, next) => {
     req.body.userId = req.user.id;
-    req.body.sources = req.body.sources.trim().split(" ");
+    req.body.sources = req.body.sources.trim().split(" ").map(e => e.toLowerCase());
     Income.create(req.body, (err, income) => {
         if(err) return next(err);
+        console.log(income);
         User.findByIdAndUpdate(req.user.id, {$push: {incomes: income.id}}, (err, user) => {
             if(err) return next(err);
-            res.redirect('/home');
+            req.flash("info", "Income is added");
+            res.redirect('/clients/income/new');
         })
     })
 });
 
 //render expense create form
 router.get('/expense/new', (req, res, next) => {
-    res.render('expenseCreateForm');
+    let info = req.flash('info')[0];
+    res.render('expenseCreateForm', {info});
 });
 
 //add expense
 router.post('/expense', (req, res, next) => {
     req.body.userId = req.user.id;
-    req.body.category = req.body.category.trim().split(" ");
+    req.body.category = req.body.category.trim().split(" ").map(e => e.toLowerCase());
     Expense.create(req.body, (err, expense) => {
         if(err) return next(err);
         User.findByIdAndUpdate(req.user.id, {$push: {expenses: expense.id}}, (err, user) => {
             if(err) return next(err);
-            res.redirect('/home');
+            req.flash("info", "Expense is added");
+            res.redirect('/clients/expense/new');
         })
         
     })
@@ -113,7 +118,7 @@ router.get('/statementList/filterByDate', (req, res, next) => {
         if(err) return next(err);
         Expense.find({date: {
             $gte: new Date(startDate),
-            $lt: new Date(endDate)
+            $lte: new Date(endDate)
         }, userId: req.user.id}, (err, expenses) => {
             if(err) return next(err);
             let sumOfExpenses = expenses.reduce((acc, curr) => acc + Number(curr.amount), 0);
@@ -133,7 +138,6 @@ router.get('/statementList/filterByMonth', (req, res, next) => {
     let date = year + "-"+month+ "-" + "01";
     let firstDay = new Date(new Date(date).getFullYear(), new Date(date).getMonth(), 1);
     let lastDay = new Date(new Date(date).getFullYear(), new Date(date).getMonth() + 1);
-    console.log(firstDay, lastDay, "hai");
     Income.find({date: {
         $gt:firstDay,
         $lte:lastDay
@@ -159,21 +163,22 @@ router.post('/statementList/filterByDateAndCategory', (req, res, next) => {
     let expenses = [];
     let incomes = [];
     let {startDate, endDate, incSource, expCategory} = req.body;
-    incSource = incSource.split(" ");
-    expCategory = expCategory.split(" ");
+    incSource = incSource.split(" ").map(e => e.toLowerCase());
+    expCategory = expCategory.split(" ").map(e => e.toLowerCase());
     Income.find({
         date: {
             $gte: new Date(startDate),
-            $lt: new Date(endDate) 
-        }, sources: {$in: incSource}
+            $lte: new Date(endDate) 
+        }, sources: {$in: incSource}, userId: req.user.id
     }, (err, incomes) => {
         if(err) return next(err);
         Expense.find({
             date: {
                 $gte: new Date(startDate),
-                $lt: new Date(endDate) 
-            }, category: {$in: expCategory}
+                $lte: new Date(endDate) 
+            }, category: {$in: expCategory}, userId: req.user.id
         }, (err, expenses) => {
+            console.log(expenses, incomes)
             if(err) return next(err);
                 let sumOfExpenses = expenses.reduce((acc, curr) => acc + Number(curr.amount), 0);
                 let sumOfIncomes = incomes.reduce((acc, curr) => acc + Number(curr.amount), 0);
